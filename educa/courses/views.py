@@ -13,6 +13,7 @@ from django.views.generic.detail import DetailView
 from braces.views import CsrfExemptMixin, JsonRequestResponseMixin
 from django.db.models import Count
 from .models import Subject
+from students.forms import CourseEnrollForm
 # Create your views here.
 class OwnerMixin(object):
     def get_queryset(self):
@@ -150,3 +151,8 @@ class CourseListView(TemplateResponseMixin,View):
 class CourseDetailView(DetailView):
     model = Course
     template_name = 'templates/courses/course/detail.html'
+
+    def get_context_data(self,**kwargs):
+        context = super(CourseDetailView,self).get_context_data(**kwargs)
+        context['enroll_form'] = CourseEnrollForm(initial={'course':self.object})
+        return context

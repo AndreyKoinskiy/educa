@@ -22,6 +22,7 @@ class Course(models.Model):
     slug = models.SlugField(max_length=200, unique = True)
     overview = models.TextField()
     created = models.DateTimeField(auto_now_add = True)
+    student = models.ManyToManyField(User, related_name = 'course_joined',blank = True)
 
     class Meta:
         ordering=['-created']
@@ -62,6 +63,9 @@ class ItemBase(models.Model):
     
     def __str__(self):
         return self.title
+
+    def render(self):
+        return render_to_string('course/content/{}.html'.format(self._meta.model_name),{'item':self})
 
 class Text(ItemBase):
     content = models.TextField()
